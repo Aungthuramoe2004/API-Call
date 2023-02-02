@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day-1</title>
+    <style>
+         body{
+            padding: 0;
+            margin: 0;
+         }
+         .content{
+            column-count: 200px 3;
+            margin: 30px;
+         }
+         img{
+            width: 100%;
+         }
+         .container{
+            background:aqua;
+            border: 2px solid black;
+            border-radius: 5px;
+            box-shadow: 0 0 20px black;
+            width:800px ;
+         }
+         
+         thead{
+           background: blanchedalmond;
+           height: 40px;
+           
+         }
+         
+         tr{
+            margin: 0px;
+            font-size: 1rem;
+            color: blue;
+            padding: 5px;
+         }
+         .photo{
+            width: 80px;
+         }
+         td{
+            color: blueviolet;
+            padding: 20px;
+            border: 2px solid black;
+         }
+         .card{
+            width: 680px;
+            height: 180px;
+            border: 5px solid darkblue;
+            margin-bottom: 20px;
+         }
+         .card-body{
+            margin-left: 10px;
+            color: brown;
+            display: flex;
+            padding: 10px;
+         }
+         .img{
+            width: 100px;
+            padding: 10px;
+         }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="card" id="card">
+           <!-- <div class="card-body">
+            <img src="" >
+            <div class="info">
+               <h3>Name</h3>
+               <h3>Price</h3>
+               <h3>Rating</h3>
+            </div> 
+          </div> -->
+        </div>  
+      <div class="container">
+             <table>
+                <thead>
+                    <tr onclick="detail()">
+                           <td>ID</td>
+                           <td>Name</td>
+                           <td>Price</td>
+                           <td>Rating</td>
+                           <td>Image</td>
+                    </tr>
+                </thead>  
+                <tbody id="ton">
+                        
+                </tbody>
+                 
+            </table>
+      </div>
+    </div>
+</body>
+<script>
+    let card=document.getElementById("card")
+    card.style.display="none";
+    let ton=document.getElementById("ton")
+    let list= "";
+    fetch("http://fakestoreapi.com/products")
+       .then((Response)=>Response.json())
+       .then((result)=>{
+          
+
+         for (let i=0; i<result.length; i++){
+            list += `<tr onclick="detail(${result[i].id})">
+                           <td>${result[i].id}</td>
+                           <td>${result[i].title}</td>
+                           <td>${result[i].price} $</td>
+                           <td>${result[i].rating.rate}</td>
+                           <td> 
+                            <a href="${result[i].image}"  target="_blink">
+                            <img src="${result[i].image} " class= "photo"></td>
+                    <tr>`;
+         }
+         
+         ton.innerHTML =list;
+       })
+    function detail(id){
+        fetch("http://fakestoreapi.com/products/"+id)
+        .then((Response)=>Response.json())
+       .then((data)=>{
+           card.innerHTML =`
+           <div class="card-body">
+              <img src="${data.image}" class="img">
+              <div class="info">
+                 <h3>${data.title}</h3>
+                 <h3>${data.price}$</h3>
+                 <h3>${data.rating.rate}</h3>
+              </div> 
+           </div>`;
+           card.style.display = "block";
+       })
+    }
+</script>
+</html>
